@@ -1,0 +1,12 @@
+.video-container {
+  position: relative;
+  margin: auto;
+  
+  width: 50%;
+  &__control-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+}

@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useReducer } from 'react'
 import { number, string, object } from 'prop-types'
 import videojs from 'video.js'
 import ControlBar from './ControlBar'
+import './styles/video_player.scss'
 
 const VIDEO = {
   play: 'play',
@@ -125,7 +126,7 @@ const VideoPlayer = ({ video, startAt, endAt, setting }) => {
   }, [ videoState.endOffset ])
 
   return (
-    <div style={{ border: 'solid 1px #e8e8e8', width: '50%', margin: '20px', position: 'relative' }}>
+    <div className="video-container">
       <video ref={player} className="video-js vjs-default-skin" width="640px" height="267px" data-vjs-player>
         <source src={video} type="video/mp4" />    
         Your browser does not support the video tag.
@@ -133,6 +134,7 @@ const VideoPlayer = ({ video, startAt, endAt, setting }) => {
       {
         videoState.endOffset && videoState.duration !== 0 && (
           <ControlBar
+            className="video-container__control-bar"
             duration={videoState.duration}
             startAt={videoState.startOffset}
             endAt={videoState.endOffset}

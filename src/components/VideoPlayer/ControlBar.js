@@ -1,11 +1,11 @@
 import React from 'react'
 import { number, func } from 'prop-types'
 import InputRange from 'react-input-range'
-import './controlbar-style.scss'
+import './styles/controlbar.scss'
 
 const ControlBar = (props) => {
   return (
-    <div className="control-bar">
+    <div className={props.className}>
       <InputRange
         maxValue={props.duration}
         minValue={0}
