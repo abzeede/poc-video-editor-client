@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useReducer } from 'react'
 import { number, string, object } from 'prop-types'
-import InputRange from 'react-input-range'
 import videojs from 'video.js'
-import 'react-input-range/lib/css/index.css'
+import ControlBar from './ControlBar'
 
 const VIDEO = {
   play: 'play',
@@ -77,6 +76,7 @@ const VideoPlayer = ({ video, startAt, endAt, setting }) => {
       player.current.play()
     })
 
+    // set video duration and end offset when video player ready to give an information
     player.current.on('loadedmetadata', () => {
       videoDispatch({ type: VIDEO.setDuration, payload: player.current.duration() })
       if (typeof videoState.endOffset === 'undefined') {
@@ -100,11 +100,14 @@ const VideoPlayer = ({ video, startAt, endAt, setting }) => {
     player.current.currentTime(videoState.startOffset)
   }, [ videoState.startOffset ])
 
-  // loop video
+  // sync video state
   useEffect(() => {
+    // when video played over the end offset, it's going to start back at start offset
     if (typeof videoState.endOffset !== 'undefined' && videoState.position > videoState.endOffset) {
       player.current.currentTime(videoState.startOffset)
     }
+    
+    // sync video playing state
     if (videoState.isPlaying && player.current.paused()) {
       player.current.play()
     } else if (!videoState.isPlaying && !player.current.paused()) {
@@ -122,40 +125,35 @@ const VideoPlayer = ({ video, startAt, endAt, setting }) => {
   }, [ videoState.endOffset ])
 
   return (
-    <>
+    <div style={{ border: 'solid 1px #e8e8e8', width: '50%', margin: '20px', position: 'relative' }}>
       <video ref={player} className="video-js vjs-default-skin" width="640px" height="267px" data-vjs-player>
         <source src={video} type="video/mp4" />    
         Your browser does not support the video tag.
       </video>
       {
         videoState.endOffset && videoState.duration !== 0 && (
-          <div style={{ display: 'flex', margin: '20px' }}>
-            <InputRange
-              maxValue={videoState.duration}
-              minValue={0}
-              onChangeStart={value => {
-                videoDispatch({ type: VIDEO.pause })
-              }}
-              onChangeComplete={value => {
-                player.current.currentTime(videoState.startOffset)
-                videoDispatch({ type: VIDEO.play })
-              }}
-              value={{
-                min: videoState.startOffset,
-                max: videoState.endOffset,
-              }}
-              onChange={value => {
-                if (value.min !== videoState.startOffset) {
-                  videoDispatch({ type: VIDEO.setStartOffset, payload: value.min })
-                } else if (value.max !== videoState.endOffset) {
-                  videoDispatch({ type: VIDEO.setEndOffset, payload: value.max })
-                }
-              }}
-            />
-          </div>
+          <ControlBar
+            duration={videoState.duration}
+            startAt={videoState.startOffset}
+            endAt={videoState.endOffset}
+            onChangeStart={value => {
+              videoDispatch({ type: VIDEO.pause })
+            }}
+            onChangeComplete={value => {
+              player.current.currentTime(videoState.startOffset)
+              videoDispatch({ type: VIDEO.play })
+            }}
+            onChange={value => {
+              if (value.min !== videoState.startOffset) {
+                videoDispatch({ type: VIDEO.setStartOffset, payload: value.min })
+              } else if (value.max !== videoState.endOffset) {
+                videoDispatch({ type: VIDEO.setEndOffset, payload: value.max })
+              }
+            }}
+          />
         )
       }
-    </>
+    </div>
   )
 }
 
@@ -169,6 +167,7 @@ VideoPlayer.propTypes = {
 VideoPlayer.defaultProps = {
   startAt: 0,
   setting: {
+    fluid: true,
     autoplay: true,
     loop: true,
     controls: false,
