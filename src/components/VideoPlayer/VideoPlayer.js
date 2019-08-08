@@ -60,7 +60,7 @@ const videoReducer = (state, action) => {
 const VideoPlayer = ({ video, startAt, endAt, setting }) => {
   let player = useRef()
   const [videoState, videoDispatch] = useReducer(videoReducer, {
-    isPlaying: false,
+    isPlaying: setting.autoplay,
     position: startAt,
     startOffset: startAt,
     endOffset: endAt,
@@ -74,6 +74,7 @@ const VideoPlayer = ({ video, startAt, endAt, setting }) => {
     // set start offset
     player.current.ready(() => {
       player.current.currentTime(startAt)
+      player.current.play()
     })
 
     player.current.on('loadedmetadata', () => {
@@ -104,6 +105,11 @@ const VideoPlayer = ({ video, startAt, endAt, setting }) => {
     if (typeof videoState.endOffset !== 'undefined' && videoState.position > videoState.endOffset) {
       player.current.currentTime(videoState.startOffset)
     }
+    if (videoState.isPlaying && player.current.paused()) {
+      player.current.play()
+    } else if (!videoState.isPlaying && !player.current.paused()) {
+      player.current.pause()
+    }
   }, [ videoState ])
 
   // change position in video when position state change
@@ -130,7 +136,7 @@ const VideoPlayer = ({ video, startAt, endAt, setting }) => {
               onChangeStart={value => {
                 videoDispatch({ type: VIDEO.pause })
               }}
-              onChangeStop={value => {
+              onChangeComplete={value => {
                 player.current.currentTime(videoState.startOffset)
                 videoDispatch({ type: VIDEO.play })
               }}
@@ -165,7 +171,7 @@ VideoPlayer.defaultProps = {
   setting: {
     autoplay: true,
     loop: true,
-    controls: true,
+    controls: false,
   }
 }
 
