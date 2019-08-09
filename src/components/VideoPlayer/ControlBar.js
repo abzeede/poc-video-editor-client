@@ -4,8 +4,18 @@ import InputRange from 'react-input-range'
 import './styles/controlbar.scss'
 
 const ControlBar = (props) => {
+  const getNavigationPosition = (currentTime, duration) => {
+    return (currentTime / duration) * 100
+  }
+  const navigatorOffset = getNavigationPosition(props.startAt, props.duration)
+  const navigatorPosition = getNavigationPosition(props.currentTime, props.duration) - navigatorOffset
+  
   return (
-    <div className={props.className}>
+    <div className="video-container__control-bar">
+      <div
+        className="video-container__control-bar__navigator"
+        style={{ width: `${navigatorPosition}%`, left: `${navigatorOffset}%`}}>
+      </div>
       <InputRange
         maxValue={props.duration}
         minValue={0}
@@ -23,6 +33,7 @@ ControlBar.propTypes = {
   onChange: func.isRequired,
   startAt: number.isRequired,
   endAt: number.isRequired,
+  currentTime: number.isRequired,
   onChangeStart: func,
   onChangeComplete: func,
 }

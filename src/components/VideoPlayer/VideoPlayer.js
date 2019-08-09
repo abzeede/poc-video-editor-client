@@ -30,7 +30,7 @@ const videoReducer = (state, action) => {
       return {
         ...state,
         isPlaying: false,
-        position: state.startOffset
+        currentPosition: state.startOffset
       }
     case VIDEO.setStartOffset:
       return {
@@ -45,7 +45,7 @@ const videoReducer = (state, action) => {
     case VIDEO.goto:
       return {
         ...state,
-        position: action.payload
+        currentPosition: action.payload
       }
     case VIDEO.setDuration:
       return {
@@ -61,7 +61,7 @@ const VideoPlayer = ({ video, startAt, endAt, setting }) => {
   let player = useRef()
   const [videoState, videoDispatch] = useReducer(videoReducer, {
     isPlaying: setting.autoplay,
-    position: startAt,
+    currentPosition: startAt,
     startOffset: startAt,
     endOffset: endAt,
     duration: 0,
@@ -104,7 +104,7 @@ const VideoPlayer = ({ video, startAt, endAt, setting }) => {
   // sync video state
   useEffect(() => {
     // when video played over the end offset, it's going to start back at start offset
-    if (typeof videoState.endOffset !== 'undefined' && videoState.position > videoState.endOffset) {
+    if (typeof videoState.endOffset !== 'undefined' && videoState.currentPosition > videoState.endOffset) {
       player.current.currentTime(videoState.startOffset)
     }
     
@@ -116,7 +116,7 @@ const VideoPlayer = ({ video, startAt, endAt, setting }) => {
     }
   }, [ videoState ])
 
-  // change position in video when position state change
+  // change currentPosition in video when currentPosition state change
   useEffect(() => {
     player.current.currentTime(videoState.startOffset)
   }, [ videoState.startOffset ])
@@ -134,8 +134,8 @@ const VideoPlayer = ({ video, startAt, endAt, setting }) => {
       {
         videoState.endOffset && videoState.duration !== 0 && (
           <ControlBar
-            className="video-container__control-bar"
             duration={videoState.duration}
+            currentTime={videoState.currentPosition}
             startAt={videoState.startOffset}
             endAt={videoState.endOffset}
             onChangeStart={value => {
@@ -170,7 +170,7 @@ VideoPlayer.defaultProps = {
   startAt: 0,
   setting: {
     fluid: true,
-    autoplay: true,
+    autoplay: false,
     loop: true,
     controls: false,
   }
