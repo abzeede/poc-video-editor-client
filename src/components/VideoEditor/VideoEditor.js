@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useReducer } from 'react'
-import { number, string, object } from 'prop-types'
+import { number, string, object, func } from 'prop-types'
 import videojs from 'video.js'
 import ControlBar from './ControlBar'
 import './styles/video_player.scss'
@@ -57,7 +57,7 @@ const videoReducer = (state, action) => {
   }
 }
 
-const VideoPlayer = ({ video, startAt, endAt, setting }) => {
+const VideoEditor = ({ video, startAt, endAt, setting, onOk }) => {
   let player = useRef()
   const [videoState, videoDispatch] = useReducer(videoReducer, {
     isPlaying: setting.autoplay,
@@ -70,6 +70,8 @@ const VideoPlayer = ({ video, startAt, endAt, setting }) => {
   const setupPlayer = () => {
     // setup
     player.current = videojs(player.current, setting)
+
+    player.current.src({ src: video, type: 'video/mp4' })
     
     // set start offset
     player.current.ready(() => {
@@ -126,54 +128,58 @@ const VideoPlayer = ({ video, startAt, endAt, setting }) => {
   }, [ videoState.endOffset ])
 
   return (
-    <div className="video-container">
-      <video ref={player} className="video-js vjs-default-skin" width="640px" height="267px" data-vjs-player>
-        <source src={video} type="video/mp4" />    
-        Your browser does not support the video tag.
-      </video>
-      {
-        videoState.endOffset && videoState.duration !== 0 && (
-          <ControlBar
-            duration={videoState.duration}
-            currentTime={videoState.currentPosition}
-            startAt={videoState.startOffset}
-            endAt={videoState.endOffset}
-            onChangeStart={value => {
-              videoDispatch({ type: VIDEO.pause })
-            }}
-            onChangeComplete={value => {
-              player.current.currentTime(videoState.startOffset)
-              videoDispatch({ type: VIDEO.play })
-            }}
-            onChange={value => {
-              if (value.min !== videoState.startOffset) {
-                videoDispatch({ type: VIDEO.setStartOffset, payload: value.min })
-              } else if (value.max !== videoState.endOffset) {
-                videoDispatch({ type: VIDEO.setEndOffset, payload: value.max })
-              }
-            }}
-          />
-        )
-      }
+    <div>
+      <div className="video-container">
+        <video ref={player} className="video-js vjs-default-skin" data-vjs-player type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        {
+          videoState.endOffset && videoState.duration !== 0 && (
+            <ControlBar
+              duration={videoState.duration}
+              currentTime={videoState.currentPosition}
+              startAt={videoState.startOffset}
+              endAt={videoState.endOffset}
+              onChangeStart={value => {
+                videoDispatch({ type: VIDEO.pause })
+              }}
+              onChangeComplete={value => {
+                player.current.currentTime(videoState.startOffset)
+                videoDispatch({ type: VIDEO.play })
+              }}
+              onChange={value => {
+                if (value.min !== videoState.startOffset) {
+                  videoDispatch({ type: VIDEO.setStartOffset, payload: value.min })
+                } else if (value.max !== videoState.endOffset) {
+                  videoDispatch({ type: VIDEO.setEndOffset, payload: value.max })
+                }
+              }}
+            />
+          )
+        }
+      </div>
+      <button onClick={() => onOk(videoState)}>OK</button>
     </div>
   )
 }
 
-VideoPlayer.propTypes = {
+VideoEditor.propTypes = {
   video: string.isRequired,
+  onOk: func,
   startAt: number,
   endAt: number,
   setting: object,
 }
 
-VideoPlayer.defaultProps = {
+VideoEditor.defaultProps = {
   startAt: 0,
+  onOk: () => {},
   setting: {
     fluid: true,
-    autoplay: false,
+    autoplay: true,
     loop: true,
     controls: false,
   }
 }
 
-export default VideoPlayer
+export default VideoEditor

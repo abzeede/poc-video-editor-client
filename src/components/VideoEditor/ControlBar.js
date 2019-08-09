@@ -17,6 +17,7 @@ const ControlBar = (props) => {
         style={{ width: `${navigatorPosition}%`, left: `${navigatorOffset}%`}}>
       </div>
       <InputRange
+        step={0.2}
         maxValue={props.duration}
         minValue={0}
         onChangeStart={props.onChangeStart}
