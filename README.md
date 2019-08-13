@@ -11,4 +11,4 @@ yarn && yarn start
 - [ ] trim video on client side
 
 ### Disclaimer
-This is exprimental project and it's not ready to use in production
+This is exprimental project and it's not ready for production
