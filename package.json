@@ -1,7 +1,8 @@
 {
-  "name": "video-player",
+  "name": "video-editor",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
+  "homepage": "https://abzeede.github.io/poc-video-editor-client/",
   "dependencies": {
     "node-sass": "^4.12.0",
     "prop-types": "^15.7.2",
@@ -14,6 +15,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "deploy": "yarn build && gh-pages -d build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -31,5 +33,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "gh-pages": "^2.1.1"
   }
 }
