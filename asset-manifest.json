@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/poc-video-editor-client/static/css/main.35a4a077.chunk.css",
+    "main.js": "/poc-video-editor-client/static/js/main.89bee645.chunk.js",
+    "main.js.map": "/poc-video-editor-client/static/js/main.89bee645.chunk.js.map",
+    "runtime~main.js": "/poc-video-editor-client/static/js/runtime~main.1a0b9709.js",
+    "runtime~main.js.map": "/poc-video-editor-client/static/js/runtime~main.1a0b9709.js.map",
+    "static/js/2.2a232ffc.chunk.js": "/poc-video-editor-client/static/js/2.2a232ffc.chunk.js",
+    "static/js/2.2a232ffc.chunk.js.map": "/poc-video-editor-client/static/js/2.2a232ffc.chunk.js.map",
+    "index.html": "/poc-video-editor-client/index.html",
+    "precache-manifest.0838dc304d81d0ee87e00f11623c2fad.js": "/poc-video-editor-client/precache-manifest.0838dc304d81d0ee87e00f11623c2fad.js",
+    "service-worker.js": "/poc-video-editor-client/service-worker.js",
+    "static/css/main.35a4a077.chunk.css.map": "/poc-video-editor-client/static/css/main.35a4a077.chunk.css.map"
+  }
+}
