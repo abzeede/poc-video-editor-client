@@ -60,7 +60,7 @@ function App() {
       </div>
       <div>
         <h2>2. Trim Video</h2>
-        {video && <VideoEditor video={video} onOk={onTrimVideo} />}
+        {video && <VideoEditor video={video} onOk={console.log} />}
       </div>
       <div id="progress">{progress}%</div>
       <video id="preview-video" width={600} height={500} />
